@@ -39,3 +39,18 @@ files by hand:
    $ po-push --sources-from-po \
         src/myapp/locales/en/LC_MESSAGES/mydomain.po \
         src/myapp/locales/*/LC)MESSAGES/mydomain.po
+
+When updating HTML templates po-push can also make some other changes, such
+as closing empty elements. These changes are harmless, but they will make your
+diff harder to verify. To help with this you can run po-push in *indent-only*
+mode: this will make it rewrite any files that will be modified, but does not
+actually change any text. After you have commited those changes you can run
+po-push in normal mode and get a diff with only text changes.
+
+.. code-block:: shell
+
+   $ po-push --indent-only src/myapp/locales/en/LC_MESSAGES/mydomain.po
+   $ git add src
+   $ git commit -m 'Prepare for text changes'
+   $ po-push src/myapp/locales/en/LC_MESSAGES/mydomain.po
+   $ git diff
