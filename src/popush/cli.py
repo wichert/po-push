@@ -4,11 +4,13 @@ import polib
 from . import ignore_msg
 from .po import rewrite_po
 from .pt import rewrite_pt
+from .python import rewrite_python
 
 
 REWRITERS = {
     '.po': rewrite_po,
     '.pt': rewrite_pt,
+    '.py': rewrite_python,
 }
 
 
