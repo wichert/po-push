@@ -2,12 +2,14 @@ import os
 import tokenize
 from . import ignore_msg
 
+
 def my_messages(fn, catalog):
     msgs = {}
     for msg in catalog:
-        for o in msg.occurrences:
-            if fn == o[0]:
-                msgs.setdefault(msg.msgid, []).append((int(o[1]), msg.msgstr))
+        if not ignore_msg(msg):
+            for o in msg.occurrences:
+                if fn == o[0]:
+                    msgs.setdefault(msg.msgid, []).append((int(o[1]), msg.msgstr))
     return msgs
 
 
@@ -19,7 +21,7 @@ def replace(fn, tokens):
 
 
 def semi_safe_eval(s):
-    return eval(s, {'__builtins__':{}}, {})
+    return eval(s, {'__builtins__': {}}, {})
 
 
 def rewrite_python(fn, catalog, indent_only):

@@ -2,6 +2,7 @@ import itertools
 import os
 import re
 import bs4
+import click
 from . import ignore_msg
 
 
@@ -40,7 +41,6 @@ def replace_message(tag, msg, fn):
     msg_parts = itertools.chain(*itertools.zip_longest(variables, texts, fillvalue=''))
 
     dynamic_children = {}
-    old_children = list(tag.children)
     for el in tag.children:
         if isinstance(el, bs4.Tag):
             dynamic_children[el.attrs.get('i18n:name', 'dynamic')] = el
@@ -55,7 +55,7 @@ def replace_message(tag, msg, fn):
                         child_name = ''
                     tag.append(dynamic_children[child_name])
                 except KeyError:
-                    print('%s: translation references non-existing %s' % (fn, part), file=sys.stderr)
+                    click.echo('%s: translation references non-existing %s' % (fn, part), err=True)
                     tag.append(bs4.NavigableString(part))
             else:
                 tag.append(bs4.NavigableString(part))
