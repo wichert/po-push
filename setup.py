@@ -13,7 +13,7 @@ install_requires = [
 setup(name='po-push',
       version=version,
       description='Various PO-related utilities',
-      long_description='',
+      long_description=open('README.rst').read(),
       classifiers=[
           'Intended Audience :: Developers',
           'License :: DFSG approved',

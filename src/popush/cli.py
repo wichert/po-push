@@ -18,7 +18,7 @@ REWRITERS = {
 @click.argument('po-file', type=click.Path(exists=True))
 @click.argument('sources', type=click.Path(exists=True), nargs=-1)
 @click.option('--indent-only', is_flag=True)
-@click.option('--sources_from_po', is_flag=True)
+@click.option('--sources-from-po', is_flag=True)
 def main(po_file, sources, indent_only, sources_from_po):
     """Merge translations into source files.
     """
