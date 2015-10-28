@@ -4,12 +4,12 @@ different tone of voice, or you need to do some quick rephrasing. In such
 situations a standard trick is to add a translation from your source language
 *to the same source language* and put your corrections in the translation.
 
-This works very well, but may lead to problems later on: for example when translating to new
-languages it is convenient to have updated text as the canonical text (although
-some tools such as Weblate can handle this and show your same-language
-translation as canonical text). At that point you can find yourself wanting
-to replace the text in your Python code and HTML templates with the new text.
-``po-push`` is a tool to do exactly that. It does three things:
+This works very well, but may lead to problems later on: for example when
+translating to new languages it is convenient to have updated text as the
+canonical text (although some tools such as Weblate can handle this and show
+your same-language translation as canonical text). At that point you can find
+yourself wanting to replace the text in your Python code and HTML templates with
+the new text. ``po-push`` is a tool to do exactly that. It does three things:
 
 1. It can update all texts in Python files
 2. It can update all texts in HTML templates (if they use the ZPT syntax).
