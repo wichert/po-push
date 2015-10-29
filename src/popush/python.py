@@ -1,3 +1,4 @@
+import ast
 import os
 import re
 import tokenize
@@ -22,8 +23,9 @@ def replace(fn, tokens):
     os.rename(tmpfn, fn)
 
 
-def semi_safe_eval(s):
-    return eval(s, {'__builtins__': {}}, {})
+def safe_eval(s):
+    tree = ast.compile(s)
+    return tree.body[0].value.s
 
 
 def format_str(token, msgstr):
@@ -46,7 +48,7 @@ def rewrite_python(fn, catalog, indent_only):
                 pending.append(token)
             else:
                 if pending:
-                    msgid = ''.join(semi_safe_eval(t[1]) for t in pending)
+                    msgid = ''.join(safe_eval(t[1]) for t in pending)
                     for (lineno, msgstr) in msgs.get(msgid, []):
                         if pending[0][2][0] - 2 <= lineno <= pending[-1][3][0] + 2:
                             changed = True
