@@ -26,9 +26,9 @@ def get_message(tag):
     msgstr = []
     for el in tag.children:
         if isinstance(el, bs4.NavigableString):
-            msgstr.append(str(el))
+            msgstr.append(unicode(el))
         elif isinstance(el, bs4.Tag):
-            msgstr.append('${%s}' % el.attrs.get('i18n:name', 'dynamic'))
+            msgstr.append(u'${%s}' % el.attrs.get('i18n:name', 'dynamic'))
     msgstr = ''.join(msgstr)
     msgid = tag.attrs['i18n:translate'] or msgstr
     (domain, msgctxt) = find_domain_and_context(tag)

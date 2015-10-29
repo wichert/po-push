@@ -30,7 +30,7 @@ def rewrite_python(fn, catalog, indent_only):
     changed = True
     with open(fn, 'rb') as input:
         pending = []
-        for token in tokenize.tokenize(input.readline):
+        for token in tokenize.generate_tokens(input.readline):
             if indent_only or token.type == tokenize.STRING:
                 pending.append(token)
             else:
