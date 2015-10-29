@@ -1,3 +1,4 @@
+*.py[co]
 /bin
 /lib
 /pip-selfcheck.json
