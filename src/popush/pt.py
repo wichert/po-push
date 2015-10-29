@@ -9,6 +9,10 @@ from . import ignore_msg
 I18N_FILTER = {'i18n:translate': True}
 STR_RX = r'\${[^}]+}'
 
+try:
+    zip_longest = itertools.zip_longest
+except AttributeError:  # For Python 2
+    zip_longest = itertools.izip_longest
 
 def find_domain_and_context(tag):
     domain = context = None
@@ -38,7 +42,7 @@ def get_message(tag):
 def replace_message(tag, msg, fn):
     texts = re.split(STR_RX, msg.msgstr)
     variables = re.findall(STR_RX, msg.msgstr)
-    msg_parts = itertools.chain(*itertools.zip_longest(variables, texts, fillvalue=''))
+    msg_parts = itertools.chain(*zip_longest(variables, texts, fillvalue=''))
 
     dynamic_children = {}
     for el in tag.children:

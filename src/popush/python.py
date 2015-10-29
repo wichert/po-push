@@ -31,13 +31,13 @@ def rewrite_python(fn, catalog, indent_only):
     with open(fn, 'rb') as input:
         pending = []
         for token in tokenize.generate_tokens(input.readline):
-            if indent_only or token.type == tokenize.STRING:
+            if indent_only or token[0] == tokenize.STRING:
                 pending.append(token)
             else:
                 if pending:
-                    msgid = ''.join(semi_safe_eval(t.string) for t in pending)
+                    msgid = ''.join(semi_safe_eval(t[1]) for t in pending)
                     for (lineno, msgstr) in msgs.get(msgid, []):
-                        if pending[0].start[0] - 2 <= lineno <= pending[-1].end[0] + 2:
+                        if pending[0][2][0] - 2 <= lineno <= pending[-1][3][0] + 2:
                             changed = True
                             output.append((tokenize.STRING, 'u' + repr(msgstr)) + pending[0][2:])
                             break
