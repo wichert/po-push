@@ -1,7 +1,9 @@
 import os
+import re
 import tokenize
 from . import ignore_msg
 
+STR_PREFIX = '''^[a-zA-Z]*(?=['"])'''
 
 def my_messages(fn, catalog):
     msgs = {}
@@ -24,6 +26,15 @@ def semi_safe_eval(s):
     return eval(s, {'__builtins__': {}}, {})
 
 
+def format_str(token, msgstr):
+    buf = repr(msgstr)
+    original_prefix = re.match(STR_PREFIX, token[1])
+    new_prefix = re.match(STR_PREFIX, buf)
+    if original_prefix.group() != new_prefix.group():
+        buf = original_prefix.group() + buf[new_prefix.end():]
+    return buf
+
+
 def rewrite_python(fn, catalog, indent_only):
     msgs = my_messages(fn, catalog)
     output = []
@@ -39,7 +50,7 @@ def rewrite_python(fn, catalog, indent_only):
                     for (lineno, msgstr) in msgs.get(msgid, []):
                         if pending[0][2][0] - 2 <= lineno <= pending[-1][3][0] + 2:
                             changed = True
-                            output.append((tokenize.STRING, 'u' + repr(msgstr)) + pending[0][2:])
+                            output.append((tokenize.STRING, format_str(pending[0], msgstr)) + pending[0][2:])
                             break
                     else:
                         output.extend(pending)
