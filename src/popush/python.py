@@ -24,8 +24,7 @@ def replace(fn, tokens):
 
 
 def safe_eval(s):
-    tree = ast.compile(s)
-    return tree.body[0].value.s
+    return ast.literal_eval(s)
 
 
 def format_str(token, msgstr):
