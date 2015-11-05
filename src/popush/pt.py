@@ -14,6 +14,7 @@ try:
 except AttributeError:  # For Python 2
     zip_longest = itertools.izip_longest
 
+
 def find_domain_and_context(tag):
     domain = context = None
     for p in itertools.chain([tag], tag.parents):
