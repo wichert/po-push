@@ -6,12 +6,16 @@ from . import ignore_msg
 
 STR_PREFIX = '''^[a-zA-Z]*(?=['"])'''
 
-def my_messages(fn, catalog):
+
+def my_messages(fn, catalog, strip):
     msgs = {}
     for msg in catalog:
         if not ignore_msg(msg):
             for o in msg.occurrences:
-                if fn == o[0]:
+                path = o[0]
+                if strip:
+                    path = os.path.sep.join(path.split(os.path.sep)[strip:])
+                if fn == path:
                     msgs.setdefault(msg.msgid, []).append((int(o[1]), msg.msgstr))
     return msgs
 
@@ -36,8 +40,8 @@ def format_str(token, msgstr):
     return buf
 
 
-def rewrite_python(fn, catalog, indent_only):
-    msgs = my_messages(fn, catalog)
+def rewrite_python(fn, catalog, indent_only, strip):
+    msgs = my_messages(fn, catalog, strip)
     output = []
     changed = True
     with open(fn, 'rb') as input:

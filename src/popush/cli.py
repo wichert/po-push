@@ -19,7 +19,8 @@ REWRITERS = {
 @click.argument('sources', type=click.Path(exists=True), nargs=-1)
 @click.option('--indent-only', is_flag=True)
 @click.option('--sources-from-po', is_flag=True)
-def main(po_file, sources, indent_only, sources_from_po):
+@click.option('-p', '--strip', type=int, default=0)
+def main(po_file, sources, indent_only, sources_from_po, strip):
     """Merge translations into source files.
     """
     catalog = polib.pofile(po_file)
@@ -30,14 +31,21 @@ def main(po_file, sources, indent_only, sources_from_po):
             if ignore_msg(msg):
                 continue
             for oc in msg.occurrences:
-                files.add(oc[0])
+                path = oc[0]
+                if strip:
+                    path = os.path.sep.join(path.split(os.path.sep)[strip:])
+                files.add(path)
 
     warned = set()
-    for fn in files:
-        ext = os.path.splitext(fn)[1]
-        rewriter = REWRITERS.get(ext)
-        if rewriter:
-            rewriter(fn, catalog, indent_only)
-        elif ext not in warned:
-            click.echo('Do not know how to update %s files' % ext, err=True)
-            warned.add(ext)
+    with click.progressbar(files, label='Updating files') as bar:
+        for fn in bar:
+            if not os.path.exists(fn):
+                click.echo('Can not find file %s' % fn, err=True)
+                continue
+            ext = os.path.splitext(fn)[1]
+            rewriter = REWRITERS.get(ext)
+            if rewriter:
+                rewriter(fn, catalog, indent_only, strip)
+            elif ext not in warned:
+                click.echo('Do not know how to update %s files' % ext, err=True)
+                warned.add(ext)

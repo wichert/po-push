@@ -72,7 +72,7 @@ def replace(fn, soup):
     os.rename(tmpfn, fn)
 
 
-def rewrite_pt(fn, catalog, indent_only):
+def rewrite_pt(fn, catalog, indent_only, path_strip):
     soup = bs4.BeautifulSoup(open(fn), 'html5lib')
     changed = False
     for tag in soup.find_all(**I18N_FILTER):
